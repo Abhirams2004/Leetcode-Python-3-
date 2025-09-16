@@ -1,0 +1,36 @@
+class Solution:
+    def maxDistance(self, arrays: List[List[int]]) -> int:
+        """
+        res: the variable to hold maxDistance, init value = 0 (the smallest abs value)
+        gmax: global max
+        gmin: global min
+        start: the first element in the sorted arrays(local min)
+        end: the last element in the sorted array(local max)
+
+        The trick is to keep gmax and gmin values always be before the current start and end value
+        that are used to get res: res = max(gmax - start, end - gmin), if update is needed
+        so even when gmax and gmin are in the same array, res must be valid 
+        because we never uses gmax and gmin at the same time to calculate the res
+        """
+        # init
+        res = 0
+        # gmax and gmin init to the max and the min in the first array
+        gmax = arrays[0][-1]
+        gmin = arrays[0][0]
+
+        # start looping from the second array
+        for arr in arrays[1:]:
+            # remember to keep the whereabouts of the gmax and the gmin before the current array 
+            # (only update the gmax and gmin after we updated res)
+            start = arr[0]
+            end = arr[-1]
+
+            # update res if it's larger than previous res       
+            res = max(end - gmin, gmax - start, res)
+
+            # now we can compare gmin vs start, gmax vs end, and update if needed 
+            gmin = min(gmin, start)
+            gmax = max(gmax, end)
+
+        return res    
+        
