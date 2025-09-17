@@ -1,0 +1,22 @@
+class Solution:
+    def replaceWords(self, dictionary: List[str], s: str) -> str:
+        ans = ""
+        n = len(s)
+        p = ""
+        i = 0
+        d = set(dictionary)
+        while i <= n:
+            if i < n and s[i] == " ":
+                ans += p
+                ans += " "
+                p = ""
+            elif i == n:
+                ans += p
+            else:
+                p += s[i]
+                if p in d:
+                    while i < n and s[i] != " ":
+                        i += 1
+                    i -= 1
+            i += 1
+        return ans
