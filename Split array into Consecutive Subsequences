@@ -1,0 +1,32 @@
+class Solution:
+    def isPossible(self, nums):
+        ones, twos, threes = defaultdict(int), defaultdict(int), defaultdict(int)
+
+        for x in nums:
+            if ones[x-1] > 0:
+                ones[x-1] -= 1 
+                twos[x] += 1 
+                continue 
+
+            if twos[x-1] > 0:
+                twos[x-1] -= 1 
+                threes[x] += 1 
+                continue 
+
+            if threes[x-1] > 0:
+                threes[x-1] -= 1 
+                threes[x] += 1 
+                continue 
+
+            ones[x] += 1 
+
+        for x in ones:
+            if ones[x] > 0:
+                return False 
+
+        for x in twos:
+            if twos[x] > 0:
+                return False 
+
+        return True
+        
