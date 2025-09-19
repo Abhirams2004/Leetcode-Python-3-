@@ -1,0 +1,14 @@
+class Solution:
+    def getImportance(self, employees: List['Employee'], id: int) -> int:
+        # BFS version
+        emp_map = {e.id: e for e in employees}
+        total = 0
+        queue = deque([id])
+        
+        while queue:
+            curr = emp_map[queue.popleft()]
+            total += curr.importance
+            queue.extend(curr.subordinates)
+        
+        return total
+        
