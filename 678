@@ -1,0 +1,22 @@
+class Solution:
+    def checkValidString(self, s: str) -> bool:
+
+        d = defaultdict(list)
+
+        for i, ch in enumerate(s):
+
+            if ch == ')':
+                if   d['(']: d['('].pop()
+                elif d['*']: d['*'].pop()
+                else       : return False
+
+            else: d[ch].append(i)
+
+        while len(d['(']):
+            
+            if not d['*'] or d['('].pop() > d['*'].pop():
+                return False
+
+        return True
+        
+        
