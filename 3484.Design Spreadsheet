@@ -1,0 +1,69 @@
+class Spreadsheet:
+
+    def __init__(self, rows: int):
+
+        self.sheet = {}
+
+        for i in range(65, 91):
+            self.sheet[chr(i)] = [0] * rows
+            
+    def setCell(self, cell: str, value: int) -> None:
+        col = cell[0]
+        index = int(cell[1:])
+
+        self.sheet[col][index - 1] = value
+        
+    def resetCell(self, cell: str) -> None:
+        self.setCell(cell, 0)
+        
+    def getValue(self, formula: str) -> int:
+        #=A1+6
+        st = formula[1:]
+        cell, num = list(st.split('+'))
+
+        if cell.isdigit() and num.isdigit():
+            return int(cell) + int(num)
+        
+        if cell.isalnum() and num.isdigit():
+            col1 = cell[0]
+            index1 = int(cell[1:])
+
+            val1 = self.sheet[col1][index1 - 1]
+
+            return val1 + int(num)
+
+
+        if cell.isdigit() and num.isalnum():
+            col1 = num[0]
+            index1 = int(num[1:])
+
+            num = self.sheet[col1][index1 - 1]
+
+            return int(cell) + num
+
+        if cell.isalnum() and num.isalnum():
+            col1 = cell[0]
+            index1 = int(cell[1:])
+
+            val1 = self.sheet[col1][index1 - 1]
+
+            col2 = num[0]
+            index2 = int(num[1:])
+
+            val2 = self.sheet[col2][index2 - 1]
+
+            return val1 + val2
+
+
+        col = cell[0]
+        index = int(cell[1:])
+
+        val = self.sheet[col][index - 1]
+
+        return val + int(num)
+
+# Your Spreadsheet object will be instantiated and called as such:
+# obj = Spreadsheet(rows)
+# obj.setCell(cell,value)
+# obj.resetCell(cell)
+# param_3 = obj.getValue(formula)
