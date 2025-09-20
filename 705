@@ -1,0 +1,31 @@
+class MyHashSet:
+
+    def __init__(self):
+        self.r=[[] for _ in range(1000007)]
+        #self.r = [False] * (10**6 + 1)
+    def hash(self,val): return val%1000007
+        
+
+    def add(self, key: int) -> None:
+        i=hash(key)
+        if key not in self.r[i]:
+            self.r[i].append(key)
+        
+
+    def remove(self, key: int) -> None:
+        i=hash(key)
+        if key in self.r[i]:
+            self.r[i].remove(key)
+        
+
+    def contains(self, key: int) -> bool:
+        i=hash(key)
+        return key in self.r[i]
+        
+
+
+# Your MyHashSet object will be instantiated and called as such:
+# obj = MyHashSet()
+# obj.add(key)
+# obj.remove(key)
+# param_3 = obj.contains(key)
