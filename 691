@@ -1,0 +1,25 @@
+class Solution:
+    def minStickers(self, stickers: List[str], target: str) -> int:
+        stickers=[Counter(sticker) for sticker in stickers]
+        
+        @functools.lru_cache(None)
+        def dfs(target):
+            if not target: #base case, need 0 stickers to spell an empty target
+                return 0 
+            target_count=Counter(target)
+            result=float('inf')
+            for sticker in stickers: # try to use each sticker
+                if target[0] in sticker: #optimization to ensure sticker has at least one char target needs
+                    new_target=[] #record the new target after we use current sticker
+                    for char in target_count:
+                        if target_count[char] > sticker.get(char, 0):
+                            #if we still need more sticker to spell char
+                            new_target+=char * (target_count[char] - sticker.get(char, 0))
+                    result=min(result,dfs(''.join(new_target))+1)
+                    # choose between use or not use this current sticker
+            return result
+        result=dfs(target)
+        return result if result!=float('inf') else -1
+
+
+        
