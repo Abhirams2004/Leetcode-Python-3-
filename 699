@@ -1,0 +1,22 @@
+class Solution:
+    def fallingSquares(self, arr: List[List[int]]) -> List[int]:
+        n=len(arr)
+        dp=[0]*n
+        ans=[]
+        mmax=0
+        for i in range(n):
+            l=arr[i][0]
+            r=l+arr[i][1]
+            for j in range(i):
+                ll=arr[j][0]
+                rr=ll+arr[j][1]
+                if r<=ll or rr<=l: continue
+                dp[i]=max(dp[i],dp[j]+r-l)
+            if not dp[i]:
+                dp[i]=arr[i][1]
+            mmax=max(mmax,dp[i])
+            ans.append(mmax)
+        return ans
+
+
+        
