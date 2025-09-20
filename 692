@@ -1,0 +1,6 @@
+class Solution:
+    def topKFrequent(self, words: List[str], k: int) -> List[str]:
+        word_counter = Counter(words)
+        results = heapq.nsmallest(k,word_counter.items(),key=lambda x : (-x[1],x[0]))
+        final_results = list(map(lambda x : x[0],results))
+        return final_results
