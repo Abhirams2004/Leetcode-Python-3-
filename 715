@@ -1,0 +1,46 @@
+class RangeModule:
+
+    def __init__(self):
+        self.range = []
+
+    # TC : O(NlogN) SC: O(N)
+    def addRange(self, left: int, right: int) -> None:
+        self.range.append([left,right])
+        self.range.sort()
+        merged = [self.range[0]]
+
+        for start, end in self.range :
+            if start <= merged[-1][1] :
+                merged[-1][1] = max(end, merged[-1][1])
+            else :
+                merged.append([start,end])
+        self.range = merged
+
+    # TC : O(N) SC : O(N)
+    def removeRange(self, left: int, right: int) -> bool:
+        tmp = []
+        
+        for start, end in self.range :
+            if start <= left and end >= right :
+                s1,e1 = start, left
+                s2,e2 = right, end
+                if s1<e1 : tmp.append([s1,e1])
+                if s2<e2 : tmp.append([s2,e2])
+                continue
+
+            elif left <= start < right :
+                start = right
+            elif left <= end < right :
+                end = left
+            
+            if start < end :
+                tmp.append([start,end])
+        
+        self.range = tmp
+
+    # TC : O(N)
+    def queryRange(self, left: int, right: int) -> None:
+        for start, end in self.range :
+            if left >= start and right <= end :
+                return True
+        return False
