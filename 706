@@ -1,0 +1,74 @@
+class MyHashMap(object):
+    def __init__(self):
+        self.BUCKETS = 32
+        self.buckets = [LinkedList()]*self.BUCKETS
+        
+    def hash(self,value):
+        return value%self.BUCKETS
+
+    def put(self, key, value):
+        bucket = self.hash(key)
+        ll = self.buckets[bucket]
+        if ll.head is None:
+            ll.head = Node(key,value)
+            ll.size+=1
+        else:
+            currNode = ll.head
+            while currNode is not None:
+                if currNode.key == key:
+                    currNode.value = value
+                    break
+                if currNode.next is None:
+                    currNode.next = Node(key,value)
+                    ll.size+=1
+                    break
+                currNode = currNode.next
+        
+
+    def get(self, key):
+        bucket = self.hash(key)
+        ll = self.buckets[bucket]
+        if ll is None:
+            return -1
+        currNode = ll.head
+        while currNode is not None:
+            if currNode.key == key:
+                return currNode.value
+            currNode = currNode.next
+        return -1
+
+        
+
+    def remove(self, key):
+        bucket = self.hash(key)
+        ll = self.buckets[bucket]
+        if ll.head is None:
+            return
+        else:
+            currNode = ll.head
+            prevNode = None
+            while currNode is not None:
+                if currNode.key == key:
+                    if prevNode is not None:
+                        prevNode.next = currNode.next
+                        ll.size-=1
+                    else:
+                        ll.head = ll.head.next
+                        ll.size-=1
+                    break
+                prevNode = currNode
+                currNode = currNode.next
+        
+
+class LinkedList():
+    def __init__(self):
+        self.head = None
+        self.size = 0
+
+
+class Node():
+    def __init__(self,key,value):
+        self.key = key
+        self.value = value
+        self.next = None
+    
