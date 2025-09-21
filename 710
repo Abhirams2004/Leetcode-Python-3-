@@ -1,0 +1,23 @@
+class Solution:
+
+    def __init__(self, n: int, blacklist: List[int]):
+        self.n = n
+        self.num_black = len(blacklist)
+        self.mapper = {b: b for b in blacklist}
+        end = n-1
+        for b in blacklist:
+            if b < self.n - self.num_black:
+                while end in self.mapper:
+                    end = end - 1
+                self.mapper[b] = end
+                end = end - 1
+        print(self.mapper)
+
+    def pick(self) -> int:
+        idx=random.randint(0, self.n-self.num_black-1)
+        return idx if idx not in self.mapper else self.mapper[idx] 
+
+
+# Your Solution object will be instantiated and called as such:
+# obj = Solution(n, blacklist)
+# param_1 = obj.pick()
