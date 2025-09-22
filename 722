@@ -1,0 +1,29 @@
+class Solution:
+    def removeComments(self, source: List[str]) -> List[str]:
+        commentless = []
+        curr = []
+        looking = False
+        for line in source:
+            ind =0
+            n = len(line)
+            while ind < n:
+                if not looking and ind < n-1 and line[ind] == "/" and (line[ind+1] == "*" or line[ind+1] == "/"):
+                    if line[ind+1] == "/":
+                        ind = n
+                    else:
+                        looking = True
+                        ind+=1
+                elif ind < n-1 and looking and line[ind] == "*" and line[ind+1] == "/":
+                    looking = False
+                    ind+=1
+                elif not looking:
+                    curr.append(line[ind])
+                ind+=1
+            if not looking and len(curr) >0:
+                commentless.append("".join(curr))
+                curr = []
+        if len(curr) >0:
+            commentless.append("".join(curr))
+        #for l in commentless: print(l)
+        return commentless
+        
