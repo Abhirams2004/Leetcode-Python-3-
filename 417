@@ -1,0 +1,28 @@
+class Solution:
+    def pacificAtlantic(self, heights: List[List[int]]) -> List[List[int]]:
+        m, n = len(heights), len(heights[0])
+        directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+        def dfs(x, y, visited):
+            visited.add((x, y))
+
+            for sx, sy in directions:
+                dx, dy = sx + x, sy + y
+                if 0 <= dx < m and 0 <= dy < n and (dx, dy) not in visited and heights[dx][dy] >= heights[x][y]:
+                    dfs(dx, dy, visited)
+        
+        atlantic, pacific = set(), set()
+
+        for i in range(m):
+            # top left by rows
+            dfs(i, 0, pacific)
+            # bottom right by rows
+            dfs(i, n - 1, atlantic)
+        
+        for i in range(n):
+            # top left by column
+            dfs(0, i, pacific)
+            # bottom right 
+            dfs(m - 1, i, atlantic)
+        
+        return list(atlantic & pacific)
+        
