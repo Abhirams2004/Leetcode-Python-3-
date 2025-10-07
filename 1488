@@ -1,0 +1,28 @@
+class Solution:
+    def avoidFlood(self, rains: List[int]) -> List[int]:
+        d = defaultdict(list)
+        filled = set()
+        heap = []
+        ans = []
+        for i in range(len(rains)-1, -1, -1):
+            d[rains[i]].append(i)
+        for i in rains:
+            if i == 0:
+                if not filled or not heap:
+                    ans.append(1)
+                else:
+                    next_idx, lake = heapq.heappop(heap)
+                    if lake in filled:
+                        ans.append(lake)
+                        filled.discard(lake)
+            else:
+                if i in filled:
+                    return []
+                else:
+                    curr_idx = d[i].pop()
+                    filled.add(i)
+                    ans.append(-1)
+                    if d[i]:
+                        heapq.heappush(heap, (d[i][-1], i))
+        return ans
+        
