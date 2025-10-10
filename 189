@@ -1,0 +1,24 @@
+class Solution:
+    def rev(self, lis, start, end):
+        i = start
+        j = end
+        while i < j:
+            # Swap elements
+            temp = lis[i]
+            lis[i] = lis[j]
+            lis[j] = temp
+            i += 1
+            j -= 1
+
+    def rotate(self, li, k):
+        n = len(li)
+        k = k % n  # Handle cases where k is larger than the length of the list
+        if k < 0:
+            k = k + n  # If k is negative, adjust it to the correct positive value
+        
+        # Step 1: Reverse the first part of the list
+        self.rev(li, 0, n - k - 1)
+        # Step 2: Reverse the second part of the list
+        self.rev(li, n - k, n - 1)
+        # Step 3: Reverse the entire list
+        self.rev(li, 0, n - 1)
