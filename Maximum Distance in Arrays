@@ -1,5 +1,5 @@
 class Solution:
-    def maxDistance(self, arrays: List[List[int]]) -> int:
+    def maxDistance(self, arrays: List[List[int]])-> int:
         """
         res: the variable to hold maxDistance, init value = 0 (the smallest abs value)
         gmax: global max
