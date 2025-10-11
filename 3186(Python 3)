@@ -1,0 +1,18 @@
+class Solution:
+    def maximumTotalDamage(self, power: List[int]) -> int:
+        power.sort()
+
+        a = b = c = p1 = 0
+        for p2 in power:
+            if p1 == p2:
+                pass
+            elif p1 + 1 == p2:
+                a, b, c = max(a, b), c, a
+            elif p1 + 2 == p2:
+                a, c = max(a, b, c), max(a, b)
+            else:
+                a = c = max(a, b, c)
+            c += p2
+            p1 = p2
+        
+        return max(a, b, c)
