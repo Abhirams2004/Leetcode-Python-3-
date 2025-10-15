@@ -1,0 +1,30 @@
+class Solution:
+    def floodFill(self, image: List[List[int]], sr: int, sc: int, color: int) -> List[List[int]]:
+        T = [(sr,sc)]
+        C = image[sr][sc]
+        ind = 0
+        while ind<len(T):
+            sr, sc=T[ind]
+            image[sr][sc]=color
+            if sr-1>=0:
+                if image[sr-1][sc]==C:
+                    image[sr-1][sc]=color
+                    if (sr-1, sc) not in T:
+                            T.append((sr-1, sc))
+            if sr+1<len(image):                
+                if image[sr+1][sc]==C:
+                    image[sr+1][sc]=color
+                    if (sr+1, sc) not in T:
+                        T.append((sr+1,sc))
+            if sc-1>=0:
+                if image[sr][sc-1]==C:
+                    image[sr][sc-1]=color
+                    if (sr, sc-1) not in T:
+                        T.append((sr,sc-1))
+            if sc+1<len(image[0]):
+                if image[sr][sc+1]==C:
+                    image[sr][sc+1]=color
+                    if (sr, sc+1) not in T:
+                        T.append((sr,sc+1))
+            ind+=1
+        return image
