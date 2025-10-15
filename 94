@@ -1,0 +1,17 @@
+class Solution:
+    def inorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
+        
+        res, stack = [], []
+        currentNode = root
+        while stack or currentNode:
+
+            while currentNode:
+                stack.append(currentNode)
+                currentNode = currentNode.left
+            
+            currentNode = stack.pop()
+            res.append(currentNode.val)
+            currentNode = currentNode.right
+        return res
+        
+        
