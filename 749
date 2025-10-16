@@ -1,0 +1,77 @@
+class Solution:
+    def containVirus(self, isInfected: List[List[int]]) -> int:
+        if all(cell == 0 for row in isInfected for cell in row): return 0
+
+        m, n = len(isInfected), len(isInfected[0])
+
+        # neighbors of a cell are those that are 4-directionally adjacent w/o going out of bounds
+        def get_cell_neighbors(y, x):
+            return set((i, j) for (i, j) in ((y - 1, x), (y + 1, x), (y, x - 1), (y, x + 1),)
+                    if 0 <= i < m and 0 <= j < n)
+        
+        quarantined_cells = set()   # set tracking positions of all cells that have been quarantined
+        
+        # compute list of 2-tuples containing info on disjoint infected regions; each 2-tuple holds
+        # the positions of a continuous infected region & positions on its uninfected boundary cells
+        def get_infected_regions():
+            regions, visited = [], set()
+
+            # stack holding all infected cells; used to perform DFS to find disjoint infected regions
+            inf_stk = [(i, j) for i, row in enumerate(isInfected) for j, cell in enumerate(row)
+                       if isInfected[i][j] and (i, j) not in quarantined_cells]
+            while inf_stk:
+                pos = inf_stk.pop()
+                if pos in visited: continue
+
+                # remove neighbors that have already been quarantined to get non-infected neighbors
+                unknown_nbrs = get_cell_neighbors(*pos).difference(quarantined_cells)
+
+                # if the current infected cell is part of the running not-known-to-be-infected boundary
+                # of the infected region currently being searched for, add it to the infected region,
+                # and add its own non-infected neighbors to the running not-known-to-be-infected boundary
+                if regions and pos in regions[-1][1]:
+                    regions[-1][0].add(pos)
+                    regions[-1][1].update(unknown_nbrs)
+                
+                # otherwise, the current infected cell must be a part of a new disjoint infection region
+                else:
+                    regions.append(({pos}, unknown_nbrs))
+
+                # push reachable neighbors that are also infected onto the infection-stack for DFS
+                for i, j in unknown_nbrs:
+                    if isInfected[i][j] == 1: inf_stk.append((i, j))
+                    
+                visited.add(pos)
+            
+            # remove the infected cells themselves from their boundaries to get set of uninfected cells
+            for inf_reg, inf_bound in regions: inf_bound.difference_update(inf_reg)
+            
+            # sort the list of 2-tups in descending order by size of each region's uninfected-neighbors
+            return sorted(regions, key=lambda reg_tup: len(reg_tup[1]), reverse=True)
+
+        # the perimeter required to wall-in each infected region is equal to the sum 
+        # of the count of infected cells that border each uninfected neighboring cell
+        def calc_wall_perimeter(inf_reg, inf_bound):
+            return sum(len(get_cell_neighbors(i, j).intersection(inf_reg)) for (i, j) in inf_bound)
+
+        res = 0
+        while True:
+            # we call `get_infected_regions` at each iteration to avoid having to manually
+            # merge previously disjoint regions that have since become continuously infected;
+            # this reduces runtime efficiency, but makes the implementation simpler
+            (inf_reg_top, inf_bound_top), *remaining_infections = get_infected_regions()
+
+            # add perimeter of walls needed to quarantine the most-infected region to result
+            res += calc_wall_perimeter(inf_reg_top, inf_bound_top)
+
+            # add all cells of the current iteration's most infectious region to the quarantined set
+            for cell in inf_reg_top: quarantined_cells.add(cell)
+
+            # exit when either all infected regions are quarantined, or all cells are infected            
+            if not remaining_infections: break
+            
+            # infect all non-infected boundary cells of the remainining unquarantined regions
+            for _, inf_bound in remaining_infections:
+                for i, j in inf_bound: isInfected[i][j] = 1
+            
+        return res
