@@ -1,0 +1,42 @@
+class Solution:
+    def crackSafe(self, n: int, k: int) -> str:
+        from itertools import product
+
+        def get_graph(span: int, pass_len: int) -> (int, dict[str, list[tuple[str]]]):
+
+            graph = {}
+            n_vertx = 0
+
+            for element in product(map(str, range(span)), repeat=pass_len):
+                graph.setdefault(element[:-1], []).append(element)
+                n_vertx += 1
+
+            return n_vertx, graph
+
+
+        def solve(graph: dict[str, list[tuple[str]]], n_vertex: int, n: int):
+
+            def go(seen: set[tuple[str]], way: list[str], vertex: tuple[str]):
+                if len(seen) == n_vertex:
+                    return way
+
+                for neib in graph[vertex[1:]]:
+                    if neib not in seen:
+                        way.append(neib[-1])
+                        seen.add(neib)
+                        ret = go(seen, way, neib)
+                        if ret: return way
+                        way.pop()
+                        seen.discard(neib)
+                return False
+
+            start = tuple('0' for _ in range(n))
+            seen = set()
+            seen.add(start)
+            result = go(seen, [''.join(start)], start)
+            return ''.join(result)
+        
+        if n == 1: return ''.join(map(str, range(k)))
+        if k == 1: return "0" * n
+        n_v, gr = get_graph(k, n)
+        return solve(gr, n_v, n)
