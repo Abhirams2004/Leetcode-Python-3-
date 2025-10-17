@@ -1,0 +1,12 @@
+class Solution:
+    def countPrimeSetBits(self, left: int, right: int) -> int:
+        primes = set([2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31])
+
+        def count_bits(n: int) -> int:
+            count = 0
+            while n:
+                n = n & (n - 1)
+                count += 1
+            return count
+        
+        return sum([int(count_bits(val) in primes) for val in range(left, right+1)])
