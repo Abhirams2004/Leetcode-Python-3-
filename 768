@@ -1,0 +1,12 @@
+class Solution:
+    def maxChunksToSorted(self, A: List[int]) -> int:
+        A_cp = A.copy()
+        A_cp.sort()
+        n = len(A)
+        res, sum, sum_cp = 0, 0, 0
+        for i in range(n):
+            sum += A[i]
+            sum_cp += A_cp[i]
+            if sum == sum_cp:
+                res += 1
+        return res        
