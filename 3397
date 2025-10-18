@@ -1,0 +1,34 @@
+class Solution:
+    def maxDistinctElements(self, nums: List[int], k: int) -> int:
+
+        n = len(nums)
+
+        count, next_distinct = 0, float("-inf")
+
+        nums.sort()
+
+        # print("nums", nums)
+
+        for i in range(n):
+            # print("i", i)
+
+            # Current smallest number to add to seen
+            curr_smallest = max(nums[i] - k, next_distinct)
+
+            if curr_smallest <= nums[i] + k:
+                count += 1
+
+                # Next distinct number to expect
+                next_distinct = curr_smallest + 1
+
+      
+        return count
+
+
+
+
+
+
+
+
+        
