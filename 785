@@ -1,0 +1,62 @@
+# class Solution: # a graph is bipartite if and only if there is no odd cycle
+#     def isBipartite(self, graph: List[List[int]]) -> bool:
+#         n = len(graph)
+#         visit = [False] * n
+#         odd_cycle = set()
+
+
+#         def dfs(node, parent, path):
+#             visit[node] = True
+#             path.append(node)
+
+#             for nei in graph[node]:
+#                 if nei == parent:
+#                     continue
+
+#                 if nei in path:
+#                     idx = path.index(nei)
+#                     cycle = path[idx:]
+
+#                     if len(cycle) % 2 ==1:
+#                         odd_cycle.add(tuple(sorted(cycle)))
+
+#                 elif not visit[nei]:
+#                     dfs(nei, node, path)
+
+#             path.pop()
+#             visit[node] = False 
+
+#         for i in range(n):
+#             dfs(i, -1, [])
+
+#         return False if len(odd_cycle) > 0 else True
+
+#         # Time O(V+e)
+#         # Space O(v)
+
+
+class Solution:
+    def isBipartite(self, graph: List[List[int]]) -> bool:
+        n = len(graph)
+        color = [None] * n
+
+        def dfs(node, mau):
+            color[node] = mau # Red 0, Blue 1
+            for nei in graph[node]:
+                if color[nei] is None:
+                    if not dfs(nei, 1- mau):
+                        return False
+
+                if color[nei] == color[node]:
+                    return False
+
+            return True
+
+        for i in range(n):
+            if color[i] is None:
+                if not dfs(i, 0):
+                    return False
+
+        return True
+# Time O(V+E)
+# Space O(v)
