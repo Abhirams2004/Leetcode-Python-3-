@@ -1,0 +1,17 @@
+class Solution:
+    def customSortString(self, order: str, s: str) -> str:
+        freq = defaultdict(int)
+        for ch in s:
+            freq[ch] += 1
+        
+        chars = []
+        for ch in order:
+            if freq[ch] > 0:
+                chars.append(repeat(ch, freq[ch]))
+                freq[ch] = 0
+
+        for ch, cnt in freq.items():
+            if cnt > 0:
+                chars.append(repeat(ch, cnt))
+
+        return ''.join(chain.from_iterable(chars))
