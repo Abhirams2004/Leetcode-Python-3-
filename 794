@@ -1,0 +1,36 @@
+class Solution:
+    def validTicTacToe(self, board: List[str]) -> bool:
+        def checkWhoWins(board): 
+            #'X'->1 and 'O'->-1
+            n = len(board)
+            rows = [0]*n
+            cols = [0]*n
+            diag = 0
+            anti = 0
+            for i,s in enumerate(board):
+                for j,ch in enumerate(s):
+                    if ch == 'X': move = 1
+                    elif ch == 'O': move = -1
+                    else: move = 0
+                    rows[i] += move
+                    cols[j] += move
+                    if i == j: diag += move
+                    if i+j == n-1: anti += move
+            winp1,winp2 = False,False
+            for i in range(n):
+                if rows[i] == n or cols[i] == n or diag == n or anti == n: winp1 = True
+                if rows[i] == -n or cols[i] == -n or diag == -n or anti == -n: winp2 = True
+            return winp1,winp2
+
+        nos = 0
+        nxs = 0
+        for s in board:
+            for ch in s:
+                if ch == 'X': nxs += 1
+                if ch == 'O': nos += 1
+        if nxs < nos or nxs - nos > 1: return False
+        winp1,winp2 = checkWhoWins(board)
+        if winp1 and winp2: return False
+        if winp1 and nxs - nos != 1: return False
+        if winp2 and nxs != nos: return False
+        return True
