@@ -1,0 +1,67 @@
+class Solution:
+    def minSwap(self, nums1: List[int], nums2: List[int]) -> int:
+        '''
+        one swap: swap nums1[i] and nums2[i]
+
+        want to make both strictly increasing
+
+        always possible
+
+        at most N swaps
+
+        idea:
+        make one strictly increasing array
+        greedily take the smaller number that works
+        then calculate the price of it
+
+        and the price of the other array
+
+        this yields one solution
+
+        maybe its always optimal?
+
+        given a cell 
+
+        if both the left values are smaller and both the right values are larger,
+        it is irrelevant 
+
+        nah, its dp
+        '''
+        N = len(nums1)
+        INF = 10 ** 6
+
+        A = list(zip(nums1, nums2))
+        
+
+        @cache
+        def calc(index, prev1, prev2):
+            j = index - 1
+            k = index - 2
+
+            if A[j][prev1] <= A[k][prev2]:
+                return INF
+
+            if A[j][1 - prev1] <= A[k][1 - prev2]:
+                return INF
+
+            if index == N:
+                return 0
+
+            return min(calc(index + 1, 0, prev1), calc(index + 1, 1, prev1) + 1)
+
+            
+
+        
+
+
+
+            if index == N:
+                return 0
+
+            
+
+
+        val = min(calc(2, 0, 0), calc(2, 1, 0) + 1, calc(2, 0, 1) + 1, calc(2, 1, 1) + 2)
+        calc.cache_clear()
+        return val
+        
