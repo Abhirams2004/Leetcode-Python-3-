@@ -1,0 +1,33 @@
+class Trie:
+
+    def __init__(self):
+        self.trieNode = {"/": False, "pWC": 0 , "tWC": 0}
+
+    def insert(self, word: str) -> None:
+        pnt = self
+        for alphabet in word:
+            if alphabet not in pnt.trieNode:
+                pnt.trieNode[alphabet] = Trie()
+            pnt.trieNode["pWC"] += 1
+            pnt = pnt.trieNode[alphabet]
+        pnt.trieNode["tWC"] += 1
+        pnt.trieNode["/"] = True 
+
+    def search(self, word: str) -> bool:
+        pnt = self
+        for alphabet in word:
+            if alphabet not in pnt.trieNode:
+                return False
+            pnt = pnt.trieNode[alphabet]
+        return pnt.trieNode["/"]
+    
+    def startsWith(self, prefix: str) -> bool:
+        pnt = self
+        count = 0
+        for alphabet in prefix:
+            if alphabet not in pnt.trieNode:
+                return False
+            count = pnt.trieNode["pWC"]
+            pnt = pnt.trieNode[alphabet]
+        return count > 0
+        
