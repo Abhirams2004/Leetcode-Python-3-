@@ -1,0 +1,50 @@
+class Solution:
+    def hitBricks(self, grid: List[List[int]], hits: List[List[int]]) -> List[int]:
+        m, n = len(grid), len(grid[0])
+
+        # DFS to mark all connected nodes to top(Not Falling Bricks) at the beginning of the program
+        # To count the number of bricks connected to a brick which is present in the hits
+        def dfs(i, j):
+            # Base Case -> Out Of Bounds or No Brick Exists 
+            if not (i >= 0 and i < m and j >= 0 and j < n) or grid[i][j] != 1:
+                return 0
+            
+            ret = 1
+            grid[i][j] = 2 # 2 means that this is connected to the top part
+
+            # Calling dfs in the four directions
+            ret += sum(dfs(x,y) for x,y in [(i-1, j), (i+1, j), (i, j-1), (i, j+1)])
+            return ret
+
+        # To check if a brick present in hits is connected to the top not falling bricks
+        def isConnected(i, j):
+            # To be connected to the top the adjacent grid values four diretionally must have atleast a 2 
+            # Top connected bricks are marked 2
+            return i == 0 or any([0<=x<m and 0<=y<n and grid[x][y]==2 for x, y in [(i-1, j), (i+1, j), (i, j-1), (i, j+1)]])
+
+
+        # At each hit mark if there is a brick present there or not
+        for i, j in hits:
+            grid[i][j] -= 1
+
+        # Now we run a dfs from every cell of the first row and mark cells which are connected to top
+        for i in range(n):
+            dfs(0, i)
+
+        # Add the hits in reverse order and store ans for every hit
+        res = [0]*len(hits)
+        for k in range(len(hits)-1, -1, -1):
+            i, j = hits[k]
+
+            # Add this brick now -> Make it +1 -> If already this hit place stored -1 then we would
+            # Not process it as it does not have any brick at any point in time but if it had a brick
+            # then we would have store 0 at that place which now would have become 1 so process it
+            # By process I mean -> If this cell is connected to the Top -> (Not Falling Bricks)
+            # find no. of cells connected to it by running a dfs around it
+
+            grid[i][j] += 1
+
+            if grid[i][j] == 1 and isConnected(i, j):
+                res[k] = dfs(i, j) - 1
+        
+        return res
