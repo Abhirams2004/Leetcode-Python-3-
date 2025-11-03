@@ -1,0 +1,46 @@
+class Solution:
+    def splitArraySameAverage(self, nums: List[int]) -> bool:
+        # Meet in the middle
+        # (s1 + s2) * (n - (l1 + l2)) == (S - (s1 + s2)) * (l1 + l2)
+        # (s1 + s2) * n == S * (l1 + l2)
+        # we need to try for l1 and l2
+        # for a given s1, we know l1
+        # l2 will be in range [0, L - l1 - 1], non empty
+        # s2 == S * (l1 + l2) / n - s1
+        # we can store s * n to avoid complex calculation
+
+        L = len(nums)
+        if L == 1:
+            return False
+        S = sum(nums)
+        mid = L // 2
+        nums1 = nums[:mid]
+        nums2 = nums[mid:]
+        
+        def getMap(arr: List[int]):
+            size = 1 << len(arr)
+            res = {}
+            for i in range(size):
+                s, l = 0, 0
+                for j in range(len(arr)):
+                    if i & 1 << j:
+                        s += arr[j]
+                        l += 1
+                if s * L not in res:
+                    res[s * L] = []
+                res[s * L].append(l)
+            return res
+        
+        map1 = getMap(nums1)
+        map2 = getMap(nums2)
+
+        for k1 in map1:
+            for l1 in map1[k1]:
+                for l2 in range(L - l1):
+                    k2 = S * (l1 + l2) - k1
+                    if k2 in map2:
+                        if l2 in map2[k2] and 0 < l1 + l2 < L:
+                            return True
+        
+        return False
+        
