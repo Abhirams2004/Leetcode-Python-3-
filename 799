@@ -1,0 +1,15 @@
+class Solution:
+    def champagneTower(self, poured: int, query_row: int, query_glass: int) -> float:
+        dp = [poured]
+
+        for _ in range(query_row):
+            next_dp = [0] * (len(dp) + 1)
+            for i, cups in enumerate(dp):
+                pour_next = (cups - 1) / 2 if cups > 1 else 0
+                next_dp[i] += pour_next
+                next_dp[i + 1] += pour_next
+            
+            dp = next_dp
+        
+        return dp[query_glass] if dp[query_glass] < 1 else 1
+        
