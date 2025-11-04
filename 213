@@ -1,0 +1,40 @@
+class Solution:
+    def rob(self, nums: List[int]) -> int:
+        #Check if len(nums) == 1, i.e, if theres only 1 house
+        if len(nums) == 1:
+            #return nums[0], the only amount in first house
+            return nums[0]
+        #Check if n == 2, i.e, if theres only 2 houses
+        if len(nums) == 2:
+            #return the max amount out of both house
+            return max(nums[0], nums[1])
+
+        #return the max of the helper functions calls twice, first call passing nums array except for the first house, second call passing nums array except for the last house 
+        return max(self.helper(nums[1:]), self.helper(nums[:-1]))
+    
+    #crete helper function by with it taking self, nums as a parameter
+    def helper(self, nums):
+        #Initialize n to len(nums)
+        n = len(nums)
+        #Check basecases for Bottom Up Tabulation Dynamic Programming
+        #Check if n == 1, i.e, if theres only 1 house
+        if n == 1:
+            #return nums[0], the only amount in first house
+            return nums[0]
+        #Check if n == 2, i.e, if theres only 2 houses
+        if n == 2:
+            #return the max amount out of both house
+            return max(nums[0], nums[1])
+
+        #initalize variables prev and curr to track maximum money robbed.
+        #prev represents the maximum money robbed from the house before the previous house
+        prev = nums[0]
+        #curr represents the maximum money robbed from the previous house
+        curr = max(nums[0], nums[1])
+        #iterate through range(2, n) to reach other houses starting from the third house
+        for i in range(2, n):
+            #Update prev to curr and curr to max of curr or nums[i] + prev
+            prev, curr = curr, max(curr, nums[i] + prev)
+
+        #return curr to return the max money we can rob
+        return curr
