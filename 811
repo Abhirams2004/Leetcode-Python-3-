@@ -1,0 +1,19 @@
+class Solution:
+    def subdomainVisits(self, cpdomains: List[str]) -> List[str]:
+        a={}
+        L1=[]
+        for string in cpdomains:
+            i=0
+            num=""
+            while(string[i]!=" "):
+                num=num+string[i]
+                i+=1
+            num1=int(num)
+            domain=string[i+1:]
+            L=domain.split(".")
+            for j in range(len(L)):
+                sub=".".join(L[j:])
+                a[sub]=a.get(sub,0)+num1
+        for i in a:
+            L1.append(str(a[i])+" "+i)
+        return L1
