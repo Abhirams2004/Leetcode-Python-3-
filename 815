@@ -1,0 +1,33 @@
+class Solution:
+    def numBusesToDestination(self, routes: List[List[int]], source: int, target: int) -> int:
+        m = defaultdict(list)
+        for bus, route in enumerate(routes):
+            for station in route:
+                m[station].append(bus)
+        
+        queue = deque([source])
+        station_visited = set([source])
+        bus_visited = set()
+        level = 0
+        while queue:
+            for _ in range(len(queue)):
+                station = queue.popleft()
+                if station == target:
+                    return level
+                
+                for bus in list(m[station]):
+                    if bus in bus_visited:
+                        continue
+                    bus_visited.add(bus)
+                    for next_station in routes[bus]:
+                        if next_station not in station_visited:
+                            queue.append(next_station)
+                            station_visited.add(next_station)
+            level += 1
+                
+        return -1
+            
+"""
+{1: {0}, 2: {0}, 7: {0, 1}, 3: {1}, 6: {1}}
+
+"""
