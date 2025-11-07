@@ -1,0 +1,36 @@
+class Solution:
+    def racecar(self, target: int) -> int:
+        @cache
+        def do(pos):
+            if(pos==0):
+                return 0
+            t=log(pos,2)
+            p=floor(t)
+            q=ceil(t)
+            if(p==q):
+                q+=1
+            ans=float('inf')
+            if(2**q==pos+1):
+                ans=q
+            if(ans!=q):
+                for i in range(1,q+1):
+                    cur=pos-(2**i)+1
+                    if(cur==0):
+                        ans=min(ans,i)
+                        continue
+                    if(cur<0):
+                        ff=i+1+do(abs(cur))
+                        ans=min(ans,ff)
+                        continue
+                    cc=i+1
+                    t=1
+                    ff=cc+1+do(cur)
+                    ans=min(ans,ff)
+                    while(cur+t<pos and cc<ans):
+                        cc+=1
+                        cur+=t
+                        t*=2
+                        ff=cc+1+do(cur)
+                        ans=min(ans,ff)
+            return ans
+        return do(target)
