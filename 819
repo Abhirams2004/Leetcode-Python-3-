@@ -1,0 +1,17 @@
+class Solution:
+    def mostCommonWord(self, paragraph: str, banned: List[str]) -> str:
+        for ch in "!?',;.":
+            paragraph = paragraph.replace(ch, " ")
+        
+        track = {}
+        for word in paragraph.lower().split():
+            track[word] = track.get(word, 0) + 1
+        
+        curr_re = 0
+        ans = ""
+        for word, f in track.items():
+            if word not in banned and f > curr_re:
+                curr_re = f
+                ans = word
+                
+        return ans
