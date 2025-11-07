@@ -1,0 +1,72 @@
+class Solution:
+    def maxPower(self, stations: List[int], rad: int, k: int) -> int:
+
+        sm = sum(stations[:rad + 1])
+        
+        # print(sm)
+
+        def check(num):
+            nonlocal sm, k
+            i = 0
+            j = rad + 1
+            ind = 0
+            smm = sm
+            queue = deque()
+            left = k
+            cnt = 0
+            while ind < len(stations):
+
+                # print(smm, left, ind, num)
+                # smm += cnt
+
+                if queue and queue[0][0] <= ind:
+                    smm -= queue.popleft()[1]
+
+                if smm < num:
+                    # print("here", smm, left)
+                    if smm + left < num:
+                        return False
+                    tmp = (num - smm)
+                    smm += tmp
+                    left = left - tmp
+                    queue.append((ind + rad + rad + 1, tmp))
+                    # print(queue)
+                
+                # print(i, ind, rad)
+                if ind - rad >= i:
+                    smm -= stations[i]
+                    i +=  1
+                if j < len(stations):
+                    smm += stations[j]
+                    # print(smm, stations[i], stations[j])
+                j += 1
+
+                
+
+                ind += 1
+            
+            # print("---")
+                
+            return True
+
+
+
+
+
+
+        mn = max(stations)
+        l = 0
+        r = sum(stations) + k
+
+        # print(l, r)
+
+        while l <= r:
+
+            mid = (l + r) // 2
+
+            if check(mid):
+                l = mid + 1
+            else:
+                r = mid - 1
+        
+        return (r)
