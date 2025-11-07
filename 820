@@ -1,0 +1,10 @@
+class Solution:
+    def minimumLengthEncoding(self, words: List[str]) -> int:
+        words = sorted(words,key=len)
+        #print(words)
+        ret = ''
+        for w in words[::-1]:
+            if (w+'#') not in ret:
+                ret = ret + w +'#'
+        #print(ret)
+        return len(ret)
