@@ -1,0 +1,16 @@
+class Solution:
+    def uniqueLetterString(self, s):
+        li = []
+        for i in range(26):
+            tem = []
+            tem.append(-1) # "faked A" in the begining
+            li.append(tem)
+        for i in range(len(s)):
+            # record position of certain char in string
+            li[ord(s[i]) - 65].append(i)
+        ans = 0
+        for each in li:
+            each.append(len(s)) # "faked A" in the end
+            for i in range(1, len(each) - 1): # We don't deal with "faked A"
+                ans += ((each[i] - each[i - 1]) * (each[i + 1] - each[i]))
+        return ans
