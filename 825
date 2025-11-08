@@ -1,0 +1,14 @@
+class Solution:
+    def numFriendRequests(self, ages: List[int]) -> int:
+        def foo(x,y):
+            return not ( y<=(0.5*x+7) or y>x)
+        
+        c=Counter(ages)
+        k=list(sorted(c.keys()))
+        ans=0
+        for x in k:
+            for y in k:
+                if foo(x,y): 
+                    ans+=c[x]*(c[y]-int(x==y))
+
+        return ans
