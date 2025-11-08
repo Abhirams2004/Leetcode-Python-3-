@@ -1,0 +1,31 @@
+class Solution:
+    def numFactoredBinaryTrees(self, arr: List[int]) -> int:
+        arr.sort()
+        #print("sorted input={}".format(arr))
+        valToCount = {} #maps arr value to number of binary trees we can make having that value as root
+        MOD = 10**9+7
+        result = 0
+        #for each arr[i] we will get the count of all possible binary trees that have arr[i] as root, and then add it to valToCount map
+        for index,val in enumerate(arr):
+            valResult = 1 #start off with just [arr[i]], then add more for each binary tree we can make with factors
+            #find all factors (by checking to the left of val) and multiply the count of each pair of factors to get the combination for this factor pair's orientation
+            for factorIdx in range(index-1,-1,-1):
+                factorCandidate = arr[factorIdx]
+                if val % factorCandidate == 0:
+                    #this is a factor, so get the sum of the combinations for the [thisfactor,completementfactor] orientation 
+                    #(i.e. this factor will go first, and later on when we iterate to another arr[factorIdx], we will use the other factor to go first).
+                    factor2 = val // factorCandidate
+                    
+                    #print("factorCandidate={},factor2={}".format(factorCandidate,factor2))
+                    #check if factor2 exists in arr
+                    if factor2 in valToCount:
+                        #note that we can do lookups because any value to the left is already computed in the previous iteration of our first for loop
+                        valResult += valToCount[factorCandidate] * valToCount[factor2]
+                        valResult %= MOD
+            
+            #append val to map so we can reuse without having to recursively compute the result for value again
+            valToCount[val] = valResult
+            result += valResult
+            result %= MOD
+        
+        return result
