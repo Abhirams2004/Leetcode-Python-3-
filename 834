@@ -1,0 +1,29 @@
+class Solution:
+    def sumOfDistancesInTree(self, n: int, edges: list[list[int]]) -> list[int]:
+        def dfs(u, p):
+            sz[u] = 1
+            for v in graph[u]:
+                if v == p:
+                    continue
+                dfs(v, u)
+                sz[u] += sz[v]
+                down[u] += down[v] + sz[v]
+        
+        def reroot(u, p, up):
+            answer[u] = down[u] + up
+            for v in graph[u]:
+                if v == p:
+                    continue
+                nup = answer[u] - (down[v] + sz[v]) + (n - sz[v])
+                reroot(v, u, nup)
+        
+        graph = [[] for _ in range(n)]
+        for u, v in edges:
+            graph[u].append(v)
+            graph[v].append(u)
+        sz = [0]*n
+        down = [0]*n
+        dfs(0, -1)
+        answer = [0]*n
+        reroot(0, -1, 0)
+        return answer
