@@ -1,0 +1,28 @@
+class Solution:
+    def findMaxForm(self, strs: List[str], m: int, n: int) -> int:
+        memo = {}  # Cache: key -> (i, rem0, rem1)
+
+        # Precompute the count of zeros and ones for each string.
+        counts = [(s.count('0'), s.count('1')) for s in strs]
+
+        def helper(i, rem0, rem1):
+            if i == len(strs):
+                return 0
+
+            # Use the tuple (i, rem0, rem1) as a unique key for this state.
+            if (i, rem0, rem1) in memo:
+                return memo[(i, rem0, rem1)]
+
+            # Option 1: Skip the current string.
+            max_count = helper(i + 1, rem0, rem1)
+
+            zeros, ones = counts[i]
+            # Option 2: Include the current string if possible.
+            if rem0 >= zeros and rem1 >= ones:
+                max_count = max(max_count, 1 + helper(i + 1, rem0 - zeros, rem1 - ones))
+
+            memo[(i, rem0, rem1)] = max_count
+            return max_count
+
+        return helper(0, m, n)
+        
