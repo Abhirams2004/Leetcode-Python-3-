@@ -1,0 +1,21 @@
+class Solution:
+    def findSecretWord(self, words: List[str], master: 'Master') -> None:
+        
+        def find_hits(wd1, wd2):
+            return sum(1 for i in range(6) if wd1[i] == wd2[i])
+
+        def next_candidate_mini_max(): 
+            minimax = ['', sys.maxsize]
+            for wd1 in words:
+                count = sum(1 for wd2 in words if not find_hits(wd1, wd2))
+                if count <= minimax[1]:  
+                    minimax[0] = wd1
+                    minimax[1] = count
+            return minimax[0]
+            
+        hit = -1;
+        while hit != 6:
+            word = next_candidate_mini_max()
+            hit = master.guess(word)
+            # converge candidate list of words towards the target
+            words = [wd for wd in words if hit == find_hits(word, wd)]
