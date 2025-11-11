@@ -1,0 +1,31 @@
+class Solution:
+    def longestMountain(self, arr: List[int]) -> int:
+        # n = len(arr)
+        # incre, decre = [0]* n, [0]*n
+
+        # for i in range(1, n):
+        #     if arr[i] > arr[i-1]:
+        #         incre[i] = incre[i-1] + 1
+
+        # for i in range(n-1)[::-1]:
+        #     if arr[i] > arr[i+1]:
+        #         decre[i] = decre[i+1] + 1
+        # maxi = 0   
+        # for i in range(1, n):
+        #     if incre[i] and decre[i]:
+        #         maxi = max(maxi, incre[i] + decre[i] + 1)
+        # return maxi
+        # if len(arr) < 3:
+        #     return 0
+
+        # In constant O(1) space
+        incre,decre,ans = 0,0,0
+        for i in range(1, len(arr)):
+            if (decre and arr[i-1] < arr[i]) or arr[i-1] == arr[i]:
+                incre,decre = 0, 0
+            incre += arr[i-1] < arr[i]
+            decre += arr[i-1] > arr[i]
+
+            if incre  and decre:
+                ans = max(ans, incre + decre + 1)
+        return ans    
