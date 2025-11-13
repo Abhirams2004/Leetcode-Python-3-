@@ -1,0 +1,35 @@
+class Solution:
+    def rectangleArea(self, rectangles: List[List[int]]) -> int:
+
+        def intersect(r1, r2):
+            x1 = max(r1[0], r2[0])
+            y1 = max(r1[1], r2[1])
+            x2 = min(r1[2], r2[2])
+            y2 = min(r1[3], r2[3])
+            if x1 < x2 and y1 < y2:
+                return (x1, y1, x2, y2) 
+            return None
+
+        def area(r):
+            return (r[2] - r[0]) * (r[3] - r[1])
+
+        hs = []
+
+        @lru_cache(None)
+        def helper(rect, idx):
+            common = 0
+            for i in range(idx):
+                inter = intersect(rect, hs[i])
+                if inter:
+                    common += area(inter) - helper(inter, i)
+            return common
+
+        ans = 0
+        for rect in rectangles:
+            rect_t = tuple(rect)
+            curr = area(rect)
+            commonArea = helper(rect_t, len(hs))
+            ans += curr - commonArea
+            hs.append(rect_t)
+
+        return ans % 1000000007
