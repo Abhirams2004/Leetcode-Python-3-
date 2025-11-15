@@ -1,0 +1,38 @@
+class Solution:
+    def findMinHeightTrees(self, n: int, edges: List[List[int]]) -> List[int]:
+        if n == 1:
+            return [0]
+        
+        # Build adjacency list
+        adj = [[] for _ in range(n)]
+        for i, j in edges:
+            adj[i].append(j)
+            adj[j].append(i)
+        
+        # Initialize the queue with all leaf nodes
+        vis = [0 for _ in range(n)]
+        q = deque()
+        for i in range(n):
+            if len(adj[i]) == 1:  # Leaf nodes have only one connection
+                q.append(i)
+                vis[i] += 1
+        
+        # Perform BFS to find the roots of MHTs
+        prev = None
+        while q:
+            prev = list(q)  # Keep track of the last layer (potential roots)
+            size = len(q)
+
+            for _ in range(size):
+                node = q.popleft()
+
+                for neighbor in adj[node]:
+                    if vis[neighbor] < len(adj[neighbor]):  # Process unvisited neighbors
+                        vis[neighbor] += 1
+
+                        if vis[neighbor] == len(adj[neighbor]) - 1:  # If it becomes a new leaf
+                            q.append(neighbor)
+        
+        # The last layer processed contains the root(s) of the MHT
+        return prev
+        
