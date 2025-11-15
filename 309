@@ -1,0 +1,41 @@
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        #Initialize a dp hashmap where key = (i, canBuy) and val = maximum proft for that key
+        #i is the index in prices array and canBuy is a boolean state where if true, we can either buy or cooldown and if otherwise false, we can either sell or cooldown
+        dp = {}
+        #Create helper function dfs by passing i, canBuy as parameters
+        def dfs(i, canBuy):
+            #Check if i is out of bounds i.e, i >= len(prices)
+            if i >= len(prices):
+                #return 0
+                return 0
+
+            #check if (i, canBuy) is already in dp hashmap
+            if (i, canBuy) in dp:
+                #return value stored dp[(i, canBuy)]
+                return dp[(i, canBuy)]
+
+            #check if canBuy is True
+            if canBuy:
+                #Initialize buy to recursive call of dfs(i + 1, False) - prices[i]
+                #Reason we pass False as we cant buy again, so canBuy is False
+                buy = dfs(i + 1, False) - prices[i]
+                #Initialize cooldown to recursive call of dfs(i + 1, canBuy) as this means we are skipping and moving on with the current canBuy state
+                cooldown = dfs(i + 1, canBuy)
+                #Cache the max(buy, cooldown) for profit to dp[(i, canBuy)]
+                dp[(i, canBuy)] = max(buy, cooldown)
+            else:
+                #Initialize sell to recursive call of dfs(i + 2, True) + prices[i]
+                #Reason we pass False as we can't sell again, so canBuy is True
+                sell = dfs(i + 2, True) + prices[i]
+                #Initialize cooldown to recursive call of dfs(i + 1, canBuy) as this means we are skipping and moving on with the current canBuy state
+                cooldown = dfs(i + 1, canBuy)
+                #Cache the max(sell, cooldown) for profit to dp[(i, canBuy)]
+                dp[(i, canBuy)] = max(sell, cooldown) 
+  
+            #return dp[(i, canBuy)] to return the maximum profit calculated recursively
+            return dp[(i, canBuy)]
+
+        #return dfs(0, True)
+        return dfs(0, True)
+        
