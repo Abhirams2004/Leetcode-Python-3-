@@ -1,0 +1,23 @@
+class Solution:
+    def maxProduct(self, words: List[str]) -> int:
+        n = len(words)
+        bitWords = []
+        
+        # Step 1: Create bitmask for each word
+        for word in words:
+            bitWord = 0
+            for c in word:
+                bitWord |= 1 << (ord(c) - ord('a'))
+            bitWords.append((bitWord, len(word)))
+        
+        # Step 2: Compare pairs of words
+        maxProduct = 0
+        for i in range(n):
+            for j in range(i + 1, n):
+                bw1, l1 = bitWords[i]
+                bw2, l2 = bitWords[j]
+                if bw1 & bw2 == 0:  # No common letters
+                    maxProduct = max(maxProduct, l1 * l2)
+        
+        return maxProduct
+        
