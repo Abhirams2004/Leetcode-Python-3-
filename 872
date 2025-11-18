@@ -1,0 +1,15 @@
+class Solution:
+    def getLeafSequence(self, root: Optional[TreeNode], leaves: List[int]) -> None:
+        if not root:
+            return
+        if not root.left and not root.right:
+            leaves.append(root.val)
+        self.getLeafSequence(root.left, leaves)
+        self.getLeafSequence(root.right, leaves)
+
+    def leafSimilar(self, root1: Optional[TreeNode], root2: Optional[TreeNode]) -> bool:
+        leaves1, leaves2 = [], []
+        self.getLeafSequence(root1, leaves1)
+        self.getLeafSequence(root2, leaves2)
+        return leaves1 == leaves2
+        
